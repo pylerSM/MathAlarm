@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.text.InputType;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.view.WindowManager;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
@@ -37,6 +38,9 @@ public class Main implements IXposedHookLoadPackage {
 				// Get an instance of this object, which is an Activity,
 				// for the purpose of using its Context
 				final Activity activity = (Activity) param.thisObject;
+				activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+							      WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+							      WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
 				// Get preferences
 				XSharedPreferences pref = new XSharedPreferences(
