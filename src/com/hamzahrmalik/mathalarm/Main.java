@@ -6,10 +6,12 @@ import android.content.DialogInterface;
 import android.text.InputType;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.os.Build;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedHelpers;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 public class Main implements IXposedHookLoadPackage {
@@ -98,14 +100,20 @@ public class Main implements IXposedHookLoadPackage {
 			}
 		};
 
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 		// Hook the aosp clock
 		XposedHelpers.findAndHookMethod(
 				"com.android.deskclock.alarms.AlarmActivity",
 				lpparam.classLoader, "dismiss", hook);
+		// Hook the google clock
 		XposedHelpers.findAndHookMethod(
 				"com.google.android.deskclock.alarms.AlarmActivity",
 				lpparam.classLoader, "dismiss", hook);
-
-	}
-
+                }
+	        else {
+  		// Hook the aosp clock
+		XposedBridge.hookAllMethods(XposedHelpers.findClass(
+				"com.android.deskclock.AlarmAlertFullScreen",
+				lpparam.classLoader), "dismiss", hook);              	
+                }
 }
