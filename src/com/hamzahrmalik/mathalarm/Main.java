@@ -95,11 +95,11 @@ public class Main implements IXposedHookLoadPackage {
 								else if (Build.VERSION.SDK_INT == 18
 										|| Build.VERSION.SDK_INT == 17)
 									XposedHelpers.callMethod(param.thisObject,
-											"dismiss", false, false);
+											"dismiss", param.args[0], param.args[1]);
 								else if (Build.VERSION.SDK_INT == 16
 										|| Build.VERSION.SDK_INT == 15)
 									XposedHelpers.callMethod(param.thisObject,
-											"dismiss", false);
+											"dismiss", param.args[0]);
 							}
 
 						});
