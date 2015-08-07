@@ -89,6 +89,7 @@ public class Main implements IXposedHookLoadPackage {
 								done = true;
 
 								// Method args depends on android version
+								if ("dismiss".equals(param.method.getName())) {
 								if (Build.VERSION.SDK_INT >= 19)
 									XposedHelpers.callMethod(param.thisObject,
 											"dismiss");
@@ -100,6 +101,12 @@ public class Main implements IXposedHookLoadPackage {
 										|| Build.VERSION.SDK_INT == 15)
 									XposedHelpers.callMethod(param.thisObject,
 											"dismiss", false);
+								}
+								
+								if ("snooze".equals(param.method.getName())) {
+									XposedHelpers.callMethod(param.thisObject,
+											"snooze");
+								}
 							}
 
 						});
@@ -120,10 +127,16 @@ public class Main implements IXposedHookLoadPackage {
 			XposedHelpers.findAndHookMethod(
 					"com.android.deskclock.alarms.AlarmActivity",
 					lpparam.classLoader, "dismiss", hook);
+			XposedHelpers.findAndHookMethod(
+					"com.android.deskclock.alarms.AlarmActivity",
+					lpparam.classLoader, "snooze", hook);
 		else
 			XposedBridge.hookAllMethods(XposedHelpers.findClass(
 					"com.android.deskclock.AlarmAlertFullScreen",
 					lpparam.classLoader), "dismiss", hook);
+			XposedBridge.hookAllMethods(XposedHelpers.findClass(
+					"com.android.deskclock.AlarmAlertFullScreen",
+					lpparam.classLoader), "snooze", hook);
 	}
 
 }
